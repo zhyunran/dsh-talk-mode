@@ -1,0 +1,38 @@
+# dsh-talk-mode — one extra agent preset, "Talk".
+#
+# The entry goes through the normal agent-preset registry, so the shipped
+# New Session preset control (client slot `conversation.hero.agentPreset`)
+# lists it automatically. No client UI code is needed.
+#
+# `order: 0` puts Talk first in that control, before the shipped presets.
+- insert:
+    - id: preset-talk
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: talk
+        name: Talk
+        description: >-
+          Pure conversation: no tools, no AGENTS.md, no skills, no runtime
+          context.
+        order: 0
+        plugins:
+          # A complete, tiny system prompt. `complete: true` replaces the
+          # whole persona section instead of appending to it, and
+          # `includeRuntimeContext: false` drops the cwd/platform/env block.
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              complete: true
+              includeRuntimeContext: false
+              prefix: |-
+                You are a conversation partner, not a coding agent.
+                Reply naturally, in the user's own language and tone.
+                You have no tools: no shell, no filesystem, no web access, no delegation.
+                Do not offer to read or write files, run commands, search the web, or start tasks.
+                If the user wants engineering work done, tell them to start a Work session.
+
+          # Denies every tool the rest of the profile registered globally, so
+          # the Talk session sends an empty tool catalog to the model.
+          # Scope-local: other presets keep their complete tool set.
+          - id: talk-mode-scope
+            name: 'dsh-talk-mode'

@@ -1,0 +1,48 @@
+{
+  "name": "dsh-talk-mode",
+  "version": "0.1.0",
+  "description": "Adds a tool-free \"Talk\" agent preset to DeepSeek Harness, so the New Session screen offers Work or Talk: a Talk session carries no tool catalog, no AGENTS.md, no skills and no runtime context, which keeps the per-request prompt small on limited plans.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "deepseek",
+    "agent-preset",
+    "talk",
+    "chat",
+    "context",
+    "tokens"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhyunran/dsh-talk-mode.git"
+  },
+  "homepage": "https://github.com/zhyunran/dsh-talk-mode#readme",
+  "bugs": {
+    "url": "https://github.com/zhyunran/dsh-talk-mode/issues"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/dsh-agent-preset": ">=0.2.0-rc.1 <0.3.0",
+    "@deepseek-ai/dsh-tools": ">=0.2.0-rc.1 <0.3.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "cordis.patch.yml"
+    }
+  }
+}
