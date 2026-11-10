@@ -4,6 +4,8 @@ One extra **agent preset** for [DeepSeek Harness](https://github.com/deepseek-ai
 
 Pick it on the New Session screen and you get a conversation that sends **no tools at all** — no shell, no filesystem, no web search, no subagents, no skills, no `AGENTS.md`, no runtime-context block. Work sessions are untouched.
 
+[中文说明](README.zh.md)
+
 ---
 
 ## Why
