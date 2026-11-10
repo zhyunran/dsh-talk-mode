@@ -1,11 +1,13 @@
 {
   "name": "dsh-talk-mode",
-  "version": "0.1.0",
-  "description": "Adds a tool-free \"Talk\" agent preset to DeepSeek Harness, so the New Session screen offers Work or Talk: a Talk session carries no tool catalog, no AGENTS.md, no skills and no runtime context, which keeps the per-request prompt small on limited plans.",
+  "version": "0.2.0",
+  "description": "One plugin for a clean chat surface plus your own DeepSeek account: adds a tool-free \"Talk\" agent preset (offered by New Session) and a guided importer that turns DeepSeek web conversations into Markdown in the workspace.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",
+    "./import": "./lib/import.js",
+    "./convert": "./lib/convert.js",
     "./package.json": "./package.json"
   },
   "files": [
@@ -25,7 +27,10 @@
     "talk",
     "chat",
     "context",
-    "tokens"
+    "tokens",
+    "export",
+    "import",
+    "chat-history"
   ],
   "repository": {
     "type": "git",

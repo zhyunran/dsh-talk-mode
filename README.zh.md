@@ -1,8 +1,11 @@
 # dsh-talk-mode
 
-给 DeepSeek Harness 增加一个**代理预设**：**Talk（纯聊天）**。
+给 DeepSeek Harness 的**一个插件，两半互相独立**：
 
-新建会话时选它，这一整个会话就**不带任何工具** —— 没有命令行、没有文件系统、没有网页搜索、没有子代理、没有技能、不注入 `AGENTS.md`、不带运行时上下文块。工作会话完全不受影响。
+- **Talk** —— 一个**不带任何工具**的代理预设：没有命令行、没有文件系统、没有网页搜索、没有子代理、没有技能、不注入 `AGENTS.md`、不带运行时上下文块。新建会话时选它，就是纯聊天；工作会话完全不受影响。
+- **Import** —— 引导式导入：把某个 DeepSeek 网页版账号的会话，导成工作区里的 Markdown。
+
+两半是**故意隔开**的：导入器是工作会话才看得见的"安装步骤"，而 Talk 会屏蔽所有全局工具——包括这个导入器——所以聊天里永远不会带上它。
 
 [English](README.md)
 
@@ -48,6 +51,17 @@ dsh plugin --profile desktop add C:/路径/dsh-talk-mode
 **新建会话** → 首页上的预设选择控件 → **Talk**。
 
 要干活就切回原来的预设，Work 侧没有任何变化。
+
+## 导入 DeepSeek 会话
+
+两步，DeepSeek 的登录令牌全程不离开浏览器。
+
+1. 在已登录 DeepSeek 的浏览器里：打开 https://chat.deepseek.com → `F12` → **Console** → 粘贴 `deepseek_import` 在 `action: "guide"` 时给出的那段脚本 → 回车。它会打印进度，最后输出 `DONE`，并把 `deepseek-chat-export.json` 下载到下载目录。
+2. 让 agent 执行导入，或直接调用工具的 `action: "run"`。它会找到最新的导出文件，按会话写成 Markdown，外加 `index.md` / `index.json`，落在 `exports/deepseek-chat/`。
+
+为什么要绕两步：DSH 读不到别的 App 的私有存储，而 DeepSeek 网页版用的是只存在于页面内存里的 64 字符 Bearer token。在页面里跑脚本，是这个令牌既拿得到、又安全可控的唯一位置。
+
+导完之后想以聊天形态回顾，就在 Talk 会话里聊——那正是它的用途。
 
 ## 原理
 

@@ -1,8 +1,11 @@
 # dsh-talk-mode
 
-One extra **agent preset** for [DeepSeek Harness](https://github.com/deepseek-ai): **Talk**.
+One plugin for [DeepSeek Harness](https://github.com/deepseek-ai) with two independent halves:
 
-Pick it on the New Session screen and you get a conversation that sends **no tools at all** — no shell, no filesystem, no web search, no subagents, no skills, no `AGENTS.md`, no runtime-context block. Work sessions are untouched.
+- **Talk** — an agent preset that sends **no tools at all**: no shell, no filesystem, no web search, no subagents, no skills, no `AGENTS.md`, no runtime-context block. Pick it on the New Session screen and you get pure conversation; work sessions are untouched.
+- **Import** — a guided importer that turns a DeepSeek web account's conversations into Markdown inside your workspace.
+
+They stay deliberately separate: the importer is a setup tool that work sessions see, and Talk denies every global tool — including that importer — so a chat never carries either.
 
 [中文说明](README.zh.md)
 
@@ -48,6 +51,17 @@ Then restart DSH.
 **New Session** → the preset control on the hero screen → **Talk**.
 
 Switch back to your normal preset for engineering work; nothing about Work changes.
+
+## Import your DeepSeek chats
+
+Two steps, and the DeepSeek token never leaves your browser.
+
+1. In the browser where DeepSeek is signed in: open https://chat.deepseek.com → `F12` → **Console** → paste the snippet `deepseek_import` returns for `action: "guide"` → Enter. It prints progress, ends with `DONE`, and downloads `deepseek-chat-export.json`.
+2. Ask the agent to import, or call the tool with `action: "run"`. It finds the newest export and writes one Markdown file per conversation plus `index.md` / `index.json` into `exports/deepseek-chat/`.
+
+Why the two-step dance: DSH cannot read another app's private storage, and DeepSeek's web client authenticates with a 64-character bearer token that lives only in the page's own memory. Running the snippet inside the page is the one place that token is both available and safe.
+
+Then chat about the archive in a Talk session — that is what it is for.
 
 ## How it works
 

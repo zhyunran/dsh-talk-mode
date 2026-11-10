@@ -1,10 +1,14 @@
-# dsh-talk-mode — one extra agent preset, "Talk".
+# dsh-talk-mode — one plugin, two halves.
 #
-# The entry goes through the normal agent-preset registry, so the shipped
-# New Session preset control (client slot `conversation.hero.agentPreset`)
-# lists it automatically. No client UI code is needed.
+# 1. `preset-talk` — a tool-free agent preset, listed by the shipped New Session
+#    preset control. Persona only: no tools, no AGENTS.md, no skills, no
+#    runtime-context block. This is the "pure chat" surface.
+# 2. `talk-mode-import` — a profile-level tool that walks the user through
+#    importing a DeepSeek web account's conversations into the workspace.
 #
-# `order: 0` puts Talk first in that control, before the shipped presets.
+# The two stay separated on purpose: the import tool is global (work sessions
+# see it), and the Talk preset's scope half denies every global tool, so a Talk
+# session never carries it. Importing is setup; chatting stays clean.
 - insert:
     - id: preset-talk
       name: '@deepseek-ai/dsh-agent-preset'
@@ -31,8 +35,12 @@
                 Do not offer to read or write files, run commands, search the web, or start tasks.
                 If the user wants engineering work done, tell them to start a Work session.
 
-          # Denies every tool the rest of the profile registered globally, so
-          # the Talk session sends an empty tool catalog to the model.
-          # Scope-local: other presets keep their complete tool set.
+          # Denies every tool the rest of the profile registered globally —
+          # including this bundle's own import tool — so the Talk session sends
+          # an empty tool catalog to the model.
           - id: talk-mode-scope
             name: 'dsh-talk-mode'
+
+    # Profile-level: the import helper is a setup step for work sessions.
+    - id: talk-mode-import
+      name: 'dsh-talk-mode/import'
