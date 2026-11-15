@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.3
+
+Uses the ecosystem's author helper instead of hand-writing the schema.
+
+- `deepseek_import` is now built with `defineTool()` rather than a bare
+  `ctx.tools.register()` call. The two take **different dialects**: `defineTool`
+  accepts per-property `required: true` and compiles it into an object-level
+  `required` array, while a raw registration must already be in that compiled
+  form. 0.2.2 mixed them, so the parameter schema the model received was the
+  author property map rather than real JSON Schema.
+- Parameters are now compiled: the model sees
+  `{ type: "object", properties: {...}, required: ["action"] }`.
+- Verified by feeding both exact schemas to the real `defineTool`: accepted, with
+  the compiled output carrying `required: ["ok", "action", "message"]` and no
+  per-property `required` left behind.
+
 ## 0.2.2
 
 Fixes the plugin failing to activate on DSH 0.2.0-rc.2.
