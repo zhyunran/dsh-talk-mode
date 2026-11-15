@@ -1,5 +1,7 @@
 # dsh-talk-mode
 
+**English** · [中文](README.zh.md)
+
 One plugin for [DeepSeek Harness](https://github.com/deepseek-ai) with two independent halves:
 
 - **Talk** — an agent preset that sends **no tools at all**: no shell, no filesystem, no web search, no subagents, no skills, no `AGENTS.md`, no runtime-context block. Pick it on the New Session screen and you get pure conversation; work sessions are untouched.
@@ -7,7 +9,6 @@ One plugin for [DeepSeek Harness](https://github.com/deepseek-ai) with two indep
 
 They stay deliberately separate: the importer is a setup tool that work sessions see, and Talk denies every global tool — including that importer — so a chat never carries either.
 
-[中文说明](README.zh.md)
 
 ---
 
@@ -111,3 +112,4 @@ Remove `dsh-talk-mode` from `dsh.profile.bundles`, then restart. Nothing else is
 ## License
 
 MIT
+
