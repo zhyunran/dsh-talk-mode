@@ -1,6 +1,6 @@
 # dsh-talk-mode
 
-[English](README.md) · **中文**
+**中文** · [English](README.md)
 
 给 DeepSeek Harness 的**一个插件，两半互相独立**：
 
