@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.2
+
+Fixes the plugin failing to activate on DSH 0.2.0-rc.2.
+
+- The tool's output schema used per-property `required: true`, which DSH's
+  supported JSON-Schema subset rejects: `required` is an object-level array of
+  names and is only legal on `type: "object"`. The whole `talk-mode-import`
+  entry therefore never activated — the package installed, but the
+  `deepseek_import` tool never appeared and the Talk preset was left alone.
+- `required` now sits on the object as `['ok', 'action', 'message']`. The
+  parameter schema keeps its author-dialect `required: true`, which is a
+  different and supported form.
+- Verified: the install reaches `restart-required` with no activation error,
+  and the installed copy loads.
+
 ## 0.2.1
 
 Attachments are no longer dropped.
