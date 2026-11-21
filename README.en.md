@@ -1,7 +1,6 @@
 # dsh-talk-mode
 
-**English** 路 [<kbd>中文</kbd>](README.md)
-
+**English** · [<kbd>中文</kbd>](README.md)
 
 One plugin for [DeepSeek Harness](https://github.com/deepseek-ai) with two independent halves:
 
