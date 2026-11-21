@@ -1,115 +1,117 @@
 # dsh-talk-mode
 
-**English** · [中文](README.zh.md)
+**涓枃** 路 [**English**](README.en.md)
 
-One plugin for [DeepSeek Harness](https://github.com/deepseek-ai) with two independent halves:
+**中文** · [English](README.md)
 
-- **Talk** — an agent preset that sends **no tools at all**: no shell, no filesystem, no web search, no subagents, no skills, no `AGENTS.md`, no runtime-context block. Pick it on the New Session screen and you get pure conversation; work sessions are untouched.
-- **Import** — a guided importer that turns a DeepSeek web account's conversations into Markdown inside your workspace.
+给 DeepSeek Harness 的**一个插件，两半互相独立**：
 
-They stay deliberately separate: the importer is a setup tool that work sessions see, and Talk denies every global tool — including that importer — so a chat never carries either.
+- **Talk** —— 一个**不带任何工具**的代理预设：没有命令行、没有文件系统、没有网页搜索、没有子代理、没有技能、不注入 `AGENTS.md`、不带运行时上下文块。新建会话时选它，就是纯聊天；工作会话完全不受影响。
+- **Import** —— 引导式导入：把某个 DeepSeek 网页版账号的会话，导成工作区里的 Markdown。
+
+两半是**故意隔开**的：导入器是工作会话才看得见的"安装步骤"，而 Talk 会屏蔽所有全局工具——包括这个导入器——所以聊天里永远不会带上它。
 
 
 ---
 
-## Why
+## 为什么需要它
 
-A DSH profile is a stack of bundles, and every bundle's tool schema is sent with every request. Measured on a real desktop profile with 20 bundles and the shipped `cordis` preset:
+DSH 的一个被 profile 由一堆 bundle 叠起来，而**每个 bundle 的工具 schema 都会随每次请求一起发出去**。在一台装了 20 个 bundle、使用内置 `cordis` 预设的真实桌面环境上实测：
 
 | | |
 |---|---|
-| tools callable by the agent | **86** |
-| tool-schema payload per request | **~116 KB** (≈30k tokens) |
-| conversation tokens | 0, before the first message |
+| 当前会话可调用的工具 | **86 个** |
+| 每次请求的工具 schema 体积 | **约 116 KB**（≈3 万 token） |
+| 对话内容 | 还没开始说话，就已经是 0 |
 
-On a limited plan that tax is paid on every single turn. It eats the context window and it eats the output budget, so replies get truncated, you regenerate, and the "please try again later" wall arrives sooner than it should.
+在小额度套餐上，这笔开销每一轮都要付。它既占用上下文窗口，又挤占输出预算，于是回答被截断、你需要重新生成、更快撞上「请稍后再试」。
 
-A Talk session pays none of it.
+Talk 会话一分钱都不付。
 
-## What a Talk request contains
+## Talk 会话的请求里有什么
 
-- one short system prompt (the `prefix` in `cordis.patch.yml`, editable)
-- **no** tool schemas
-- **no** `AGENTS.md` / workspace instructions
-- **no** skill catalog
-- **no** runtime-context block (cwd, platform, env vars)
+- 一小段系统提示（`cordis.patch.yml` 里的 `prefix`，可自己改）
+- **没有**工具 schema
+- **没有** `AGENTS.md` / 工作区指令
+- **没有**技能目录
+- **没有**运行时上下文块（cwd、平台、环境变量）
 
-## Install
+## 安装
 
-The package is a DSH bundle (`dsh.bundle.patch`), so it installs like any other plugin.
+这个包本身就是一个 DSH bundle（`dsh.bundle.patch`），和别的插件一样装：
 
 ```bash
-# from this folder (or an extracted tarball)
-dsh plugin --profile desktop add C:/path/to/dsh-talk-mode
+# 在本目录（或解压出来的目录）
+dsh plugin --profile desktop add C:/路径/dsh-talk-mode
 ```
 
-`dsh plugin add` installs it into the profile; add `dsh-talk-mode` to `dsh.profile.bundles` in that profile's `package.json` if your profile manager does not do it for you. The GUI's **Settings → Plugins** page and the `plugin_manager` tool do both steps.
+`dsh plugin add` 会装进 profile；如果你的插件管理器不代劳，再把 `dsh-talk-mode` 加进该 profile 的 `package.json` 的 `dsh.profile.bundles`。图形界面的 **设置 → 插件** 页和 `plugin_manager` 工具会把这两步都做掉。
 
-Then restart DSH.
+然后重启 DSH。
 
-## Use
+## 使用
 
-**New Session** → the preset control on the hero screen → **Talk**.
+**新建会话** → 首页上的预设选择控件 → **Talk**。
 
-Switch back to your normal preset for engineering work; nothing about Work changes.
+要干活就切回原来的预设，Work 侧没有任何变化。
 
-## Import your DeepSeek chats
+## 导入 DeepSeek 会话
 
-Two steps, and the DeepSeek token never leaves your browser.
+两步，DeepSeek 的登录令牌全程不离开浏览器。
 
-1. In the browser where DeepSeek is signed in: open https://chat.deepseek.com → `F12` → **Console** → paste the snippet `deepseek_import` returns for `action: "guide"` → Enter. It prints progress, ends with `DONE`, and downloads `deepseek-chat-export.json`.
-2. Ask the agent to import, or call the tool with `action: "run"`. It finds the newest export and writes one Markdown file per conversation plus `index.md` / `index.json` into `exports/deepseek-chat/`.
+1. 在已登录 DeepSeek 的浏览器里：打开 https://chat.deepseek.com → `F12` → **Console** → 粘贴 `deepseek_import` 在 `action: "guide"` 时给出的那段脚本 → 回车。它会打印进度，最后输出 `DONE`，并把 `deepseek-chat-export.json` 下载到下载目录。
+2. 让 agent 执行导入，或直接调用工具的 `action: "run"`。它会找到最新的导出文件，按会话写成 Markdown，外加 `index.md` / `index.json`，落在 `exports/deepseek-chat/`。
 
-Why the two-step dance: DSH cannot read another app's private storage, and DeepSeek's web client authenticates with a 64-character bearer token that lives only in the page's own memory. Running the snippet inside the page is the one place that token is both available and safe.
+为什么要绕两步：DSH 读不到别的 App 的私有存储，而 DeepSeek 网页版用的是只存在于页面内存里的 64 字符 Bearer token。在页面里跑脚本，是这个令牌既拿得到、又安全可控的唯一位置。
 
-Then chat about the archive in a Talk session — that is what it is for.
+导完之后想以聊天形态回顾，就在 Talk 会话里聊——那正是它的用途。
 
-## How it works
+## 原理
 
-Two halves, no client-side code:
+两半，不需要客户端 UI 代码：
 
-1. **`cordis.patch.yml`** inserts one `@deepseek-ai/dsh-agent-preset` entry with `id: talk`. The preset registry feeds the shipped New Session preset control (`conversation.hero.agentPreset`), so the option appears automatically.
-2. **`lib/index.js`** mounts *inside* that preset's scope and calls
+1. **`cordis.patch.yml`** 插入一条 `@deepseek-ai/dsh-agent-preset` 条目，`id: talk`。预设注册表正好喂给内置的「新建会话」预设控件（`conversation.hero.agentPreset`），所以选项自己就出现了。
+2. **`lib/index.js`** 挂在该预设的**作用域内**，调用
 
    ```js
-   ctx.tools.restrict({ deny: <every globally visible tool name> })
+   ctx.tools.restrict({ deny: <所有全局可见工具名> })
    ```
 
-   `tools.restrict()` is scope-local: it intersects with other restrictions and never modifies the global view, so every other preset keeps its full tool set.
+   `tools.restrict()` 是作用域局部的：它只做交集、不改全局视图，所以其它预设的工具一个不少。
 
-   That safety is enforced by the harness, not promised by this plugin: `restrict()` refuses to run on a context-global scope (`"a context-global restriction would mask every agent"`). A misconfiguration can therefore only fail to shrink Talk — it cannot narrow a Work session.
+   这层安全由 Harness 保证，不靠本插件的自觉：`restrict()` 在「上下文全局」的作用域上会直接抛错（`a context-global restriction would mask every agent`）。所以就算配置写错，最坏结果也只是 Talk 没变小 —— 它不可能反过来削弱 Work 会话。
 
-`order: 0` puts Talk first in the picker.
+`order: 0` 让 Talk 排在选择器第一位。
 
-## Caveats
+## 注意
 
-- Tools registered **after** a Talk session mounts (an MCP server that connects later, for example) are not covered. Start a new Talk session after such a change.
-- System-prompt sections contributed by root-level plugins are not removed by this plugin — only the tool catalog, instructions, skills and runtime block are.
-- The harness always has *some* system prompt. "No system context" here means no tool schemas, no `AGENTS.md`, no skills, no runtime block.
+- 在 Talk 会话挂载**之后**才注册的工具（例如稍后才连上的 MCP 服务器）不会被覆盖。加了这类东西之后新开一个 Talk 会话即可。
+- 由根级插件贡献的系统提示段落不会被本插件移除 —— 本插件移除的是工具清单、指令、技能和运行时块。
+- Harness 总归会有*一点*系统提示。这里说的「无系统上下文」指：无工具 schema、无 `AGENTS.md`、无技能、无运行时块。
 
-## Customise
+## 自定义
 
-Edit `cordis.patch.yml` after installing (the copy inside the profile's `node_modules/dsh-talk-mode/`):
+装好后改 profile 里那份 `node_modules/dsh-talk-mode/cordis.patch.yml`：
 
 ```yaml
 config:
-  name: Talk            # label in the picker
-  description: ...      # subtext in the picker
-  order: 0              # position
+  name: Talk            # 选择器里的名字
+  description: ...      # 选择器里的说明
+  order: 0              # 排序
   plugins:
     - id: persona
       config:
-        prefix: |-      # ← your chat persona
+        prefix: |-      # ← 你的聊天人格
           ...
 ```
 
-Restart DSH to reload the bundle.
+改完重启 DSH 生效。
 
-## Uninstall
+## 卸载
 
-Remove `dsh-talk-mode` from `dsh.profile.bundles`, then restart. Nothing else is written.
+把 `dsh-talk-mode` 从 `dsh.profile.bundles` 里删掉，重启即可。不写任何别的东西。
 
-## License
+## 许可
 
 MIT
 

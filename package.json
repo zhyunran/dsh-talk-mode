@@ -1,54 +1,54 @@
 {
-  "name": "dsh-talk-mode",
-  "version": "0.2.3",
-  "description": "One plugin for a clean chat surface plus your own DeepSeek account: adds a tool-free \"Talk\" agent preset (offered by New Session) and a guided importer that turns DeepSeek web conversations into Markdown in the workspace.",
-  "type": "module",
-  "main": "lib/index.js",
-  "exports": {
-    ".": "./lib/index.js",
-    "./import": "./lib/import.js",
-    "./convert": "./lib/convert.js",
-    "./package.json": "./package.json"
-  },
-  "files": [
-    "lib",
-    "cordis.patch.yml",
-    "README.md",
-    "README.zh.md",
-    "TEST-PLAN.md",
-    "CHANGELOG.md",
-    "LICENSE"
-  ],
-  "keywords": [
-    "dsh",
-    "dsh-plugin",
-    "deepseek-harness",
-    "deepseek",
-    "agent-preset",
-    "talk",
-    "chat",
-    "context",
-    "tokens",
-    "export",
-    "import",
-    "chat-history"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zhyunran/dsh-talk-mode.git"
-  },
-  "homepage": "https://github.com/zhyunran/dsh-talk-mode#readme",
-  "bugs": {
-    "url": "https://github.com/zhyunran/dsh-talk-mode/issues"
-  },
-  "license": "MIT",
-  "peerDependencies": {
-    "@deepseek-ai/dsh-agent-preset": ">=0.2.0-rc.1 <0.3.0",
-    "@deepseek-ai/dsh-tools": ">=0.2.0-rc.1 <0.3.0"
-  },
-  "dsh": {
-    "bundle": {
-      "patch": "cordis.patch.yml"
-    }
-  }
+    "name":  "dsh-talk-mode",
+    "version":  "0.2.3",
+    "description":  "One plugin for a clean chat surface plus your own DeepSeek account: adds a tool-free \"Talk\" agent preset (offered by New Session) and a guided importer that turns DeepSeek web conversations into Markdown in the workspace.",
+    "type":  "module",
+    "main":  "lib/index.js",
+    "exports":  {
+                    ".":  "./lib/index.js",
+                    "./import":  "./lib/import.js",
+                    "./convert":  "./lib/convert.js",
+                    "./package.json":  "./package.json"
+                },
+    "files":  [
+                  "lib",
+                  "cordis.patch.yml",
+                  "README.md",
+                  "TEST-PLAN.md",
+                  "CHANGELOG.md",
+                  "LICENSE",
+                  "README.en.md"
+              ],
+    "keywords":  [
+                     "dsh",
+                     "dsh-plugin",
+                     "deepseek-harness",
+                     "deepseek",
+                     "agent-preset",
+                     "talk",
+                     "chat",
+                     "context",
+                     "tokens",
+                     "export",
+                     "import",
+                     "chat-history"
+                 ],
+    "repository":  {
+                       "type":  "git",
+                       "url":  "git+https://github.com/zhyunran/dsh-talk-mode.git"
+                   },
+    "homepage":  "https://github.com/zhyunran/dsh-talk-mode#readme",
+    "bugs":  {
+                 "url":  "https://github.com/zhyunran/dsh-talk-mode/issues"
+             },
+    "license":  "MIT",
+    "peerDependencies":  {
+                             "@deepseek-ai/dsh-agent-preset":  "\u003e=0.2.0-rc.1 \u003c0.3.0",
+                             "@deepseek-ai/dsh-tools":  "\u003e=0.2.0-rc.1 \u003c0.3.0"
+                         },
+    "dsh":  {
+                "bundle":  {
+                               "patch":  "cordis.patch.yml"
+                           }
+            }
 }
