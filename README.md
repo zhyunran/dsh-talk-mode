@@ -1,6 +1,6 @@
 # dsh-talk-mode
 
-**涓枃** 路 [**English**](README.en.md)
+**中文** 路 [<kbd>English</kbd>](README.en.md)
 
 **中文** · [English](README.md)
 

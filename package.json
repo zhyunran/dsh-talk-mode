@@ -17,7 +17,8 @@
                   "TEST-PLAN.md",
                   "CHANGELOG.md",
                   "LICENSE",
-                  "README.en.md"
+                  "README.en.md",
+                  "README.zh.md"
               ],
     "keywords":  [
                      "dsh",
